@@ -41,7 +41,7 @@ There are two warnings you should keep in mind:
 
 =item *
 
-This is NEW CODE, so there may be hidden problem. This this first on your real data before doing any major conversions.
+This is NEW CODE, so there may be hidden problems. Make sure you verify the result before throwing out the original rrds.
 
 =item *
 
