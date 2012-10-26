@@ -1,0 +1,100 @@
+=head1 NAME
+
+rrdjig - use data from an existing rrd file to populate a new one
+
+=head1 SYNOPSIS
+
+B<rrdjig> [I<options>...] I<src.rrd> I<dest.rrd>
+
+     --man           show man-page and exit
+ -h, --help          display this help and exit
+     --version       show version information and exit
+     --verbose       talk while you work
+     --noaction      just talk don't act
+     --src-tmpl=tmpl output template for the source rrd
+     --dst-tmpl=tmpl input template for the destination rrd
+
+=head1 DESCRIPTION
+
+In rrdtool, data gets processed immediately upon arrival. This means that
+the original data is never stored and it is thus not easily possible to
+restructure data at a later stage. In the rrdtool core there are no
+functions to modify the base step size nor the number and types of RRAs in a
+graceful manner.
+
+The rrdjig tool tries to rebuild the original data as closely as possible
+based on the data found in the rrd file. It takes AVERAGE, MIN and MAX RRAs
+into account and rebuilds the original data stream such that it can be
+re-entered into a fresh rrd file. Depending on the configuration of the new
+rrd file the resulting data closely matches the data in the original rrd
+file.
+
+If the DS configuration of the new RRD file differs from the original
+one the B<--src-tmp> and B<--dest-tmp> options can be used to override
+the default order of DS entries.
+
+=head1 BEWARE
+
+There are two warnings you should keep in mind:
+
+=over
+
+=item *
+
+This is NEW CODE, so there may be hidden problem. This this first on your real data before doing any major conversions.
+
+=item *
+
+In my testing there were differences between source and destination which I attribute to
+quantization issues especially when switching from one consolidation level to the next one.
+
+=back
+
+=head1 EXAMPLE
+
+F<legacy.rrd> has data for the last two years and F<new.rrd> is still empty
+but created with a start data two years in the past. F<legacy.rrd> contains
+4 Date Sources (in,out,error,drop) and F<new.rrd> contains 3 data-sources
+(myout,myin,overrun). We want to transfer the old 'in' to 'myin' and 'out'
+to 'myout' while dropping 'error' and 'drop'.
+
+ rrdjiig --src-tmpl=in:out --dst-tmpl=myin:myout legacy.rrd new.rrd
+
+=head1 COPYRIGHT
+
+Copyright (c) 2010 by OETIKER+PARTNER AG. All rights reserved.
+
+=head1 LICENSE
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+=head1 AUTHOR
+
+S<Tobi Oetiker E<lt>tobi@oetiker.chE<gt>>
+
+The development of  this tool has been sponsored by L<www.init7.net|http://www.init7.net>.
+ 
+=cut
+
+# Emacs Configuration
+#
+# Local Variables:
+# mode: cperl
+# eval: (cperl-set-style "PerlStyle")
+# mode: flyspell
+# mode: flyspell-prog
+# End:
+#
+# vi: sw=4 et
