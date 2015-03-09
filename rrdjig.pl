@@ -123,6 +123,7 @@ sub fetch_data($$$){
         print STDERR "FETCH #### CF $cf #####################################\n" 
             if $opt{verbose};
         for my $t (@{$tasks->{$cf}}){
+            next if $t->{start} == $t->{end}; 
             my ($start,$step,$names,$array) = RRDs::fetch(
                 $src,$cf,'--resolution',$t->{step},
                 '--start',$t->{start},'--end',$t->{end}
